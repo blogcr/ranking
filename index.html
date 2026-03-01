@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ranking Analytics</title>
+
+<style>
+body{
+  font-family: Georgia, serif;
+  background:#f4f4f4;
+  margin:0;
+  padding:40px 20px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  background:#ffffff;
+  padding:40px;
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+h2{
+  font-size:28px;
+  font-weight:normal;
+  margin-bottom:40px;
+  color:#444;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 0;
+  border-bottom:1px solid #eee;
+}
+
+.numero{
+  font-size:20px;
+  font-weight:bold;
+  width:40px;
+}
+
+.link{
+  flex:1;
+  text-decoration:none;
+  color:#000;
+  font-size:18px;
+}
+
+.link:hover{
+  text-decoration:underline;
+}
+
+.views{
+  font-size:14px;
+  color:#666;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Ranking Analytics</h1>
+  <h2>Mais lidos da semana</h2>
+  <div id="ranking">Carregando...</div>
+</div>
+
+<script>
+
+var api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
+
+fetch(api)
+  .then(function(response){ return response.json(); })
+  .then(function(data){
+
+    var container = document.getElementById("ranking");
+    container.innerHTML = "";
+
+    if(!data.length){
+      container.innerHTML = "Nenhum resultado encontrado.";
+      return;
+    }
+
+    for(var i=0; i<data.length; i++){
+
+      var numero = i + 1;
+
+      var titulo = data[i].url
+        .split("/")
+        .pop()
+        .replace(".html","")
+        .replace(/-/g," ")
+        .replace(/\b\w/g,function(l){ return l.toUpperCase(); });
+
+      container.innerHTML +=
+        '<div class="item">' +
+        '<div class="numero">'+ numero +'</div>' +
+        '<a class="link" href="'+ data[i].url +'" target="_blank">'+ titulo +'</a>' +
+        '<div class="views">'+ data[i].views +' visualizações</div>' +
+        '</div>';
+    }
+
+  })
+  .catch(function(){
+    document.getElementById("ranking").innerHTML =
+      "Erro ao carregar ranking.";
+  });
+
+</script>
+
+</body>
+</html>
