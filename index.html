@@ -14,12 +14,8 @@ body{
 }
 
 .container{
-  max-width:900px;
+  max-width:1200px;
   margin:auto;
-  background:#ffffff;
-  padding:40px;
-  border-radius:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
 }
 
 h1{
@@ -34,47 +30,49 @@ h2{
   color:#444;
 }
 
-.item{
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:25px;
+}
+
+.card{
+  position:relative;
+  height:260px;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.1));
+  padding:20px;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 0;
-  border-bottom:1px solid #eee;
-  transition:background 0.2s ease;
+  flex-direction:column;
+  justify-content:flex-end;
 }
 
-.item:hover{
-  background:#fafafa;
+.autor{
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  opacity:0.9;
 }
 
-.numero{
+.titulo{
   font-size:20px;
-  font-weight:bold;
-  width:40px;
-}
-
-.link{
-  flex:1;
-  text-decoration:none;
-  color:#000;
-  font-size:18px;
-}
-
-.link:hover{
-  text-decoration:underline;
+  margin:5px 0 8px 0;
+  line-height:1.3;
 }
 
 .views{
-  font-size:14px;
-  color:#666;
-}
-
-.loading{
-  color:#666;
-}
-
-.erro{
-  color:#b00020;
+  font-size:13px;
+  opacity:0.8;
 }
 </style>
 </head>
@@ -83,82 +81,65 @@ h2{
 <div class="container">
   <h1>Ranking Analytics</h1>
   <h2>Mais lidos da semana</h2>
-  <div id="ranking" class="loading">Carregando...</div>
+  <div id="ranking">Carregando...</div>
 </div>
 
 <script>
 
-const api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
+var apiRanking = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
+var feedBlogger = "https://www.carlosromero.com.br/feeds/posts/default?alt=json&max-results=50";
 
-async function carregarRanking() {
+Promise.all([
+  fetch(apiRanking).then(r => r.json()),
+  fetch(feedBlogger).then(r => r.json())
+])
+.then(function([ranking, feed]){
 
-  const container = document.getElementById("ranking");
+  var container = document.getElementById("ranking");
+  container.innerHTML = '<div class="grid"></div>';
+  var grid = document.querySelector(".grid");
 
-  try {
+  var posts = feed.feed.entry;
 
-    const response = await fetch(api, { cache: "no-store" });
+  ranking.forEach(function(item){
 
-    if (!response.ok) {
-      throw new Error("Resposta inválida da API");
-    }
-
-    const data = await response.json();
-
-    container.innerHTML = "";
-
-    if (!Array.isArray(data) || data.length === 0) {
-      container.innerHTML = "Nenhum resultado encontrado.";
-      return;
-    }
-
-    data.forEach(function(item, index){
-
-      const div = document.createElement("div");
-      div.className = "item";
-
-      const numero = document.createElement("div");
-      numero.className = "numero";
-      numero.textContent = index + 1;
-
-      const link = document.createElement("a");
-      link.className = "link";
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener";
-
-      link.textContent = formatarTitulo(item.url);
-
-      const views = document.createElement("div");
-      views.className = "views";
-      views.textContent = item.views + " visualizações";
-
-      div.appendChild(numero);
-      div.appendChild(link);
-      div.appendChild(views);
-
-      container.appendChild(div);
-
+    var match = posts.find(function(post){
+      var link = post.link.find(l => l.rel === "alternate").href;
+      return link === item.url;
     });
 
-  } catch (erro) {
+    if(!match) return;
 
-    container.className = "erro";
-    container.textContent = "Erro ao carregar ranking.";
+    var titulo = match.title.$t;
+    var autor = match.author[0].name.$t;
 
-  }
-}
+    var imagem = "";
+    if(match.media$thumbnail){
+      imagem = match.media$thumbnail.url.replace("s72-c","s1200");
+    }
 
-function formatarTitulo(url) {
+    if(!imagem){
+      imagem = "https://via.placeholder.com/800x600?text=Sem+Imagem";
+    }
 
-  return url
-    .split("/")
-    .pop()
-    .replace(".html","")
-    .replace(/-/g," ")
-    .replace(/\b\w/g,function(l){ return l.toUpperCase(); });
-}
+    var card =
+      '<a href="'+ item.url +'" target="_blank" class="card" style="background-image:url('+ imagem +')">' +
+        '<div class="overlay">' +
+          '<div class="autor">'+ autor +'</div>' +
+          '<div class="titulo">'+ titulo +'</div>' +
+          '<div class="views">'+ item.views +' visualizações</div>' +
+        '</div>' +
+      '</a>';
 
-carregarRanking();
+    grid.innerHTML += card;
+
+  });
+
+})
+.catch(function(){
+  document.getElementById("ranking").innerHTML =
+    "<p style='color:#b00'>Erro ao carregar ranking.</p>";
+});
 
 </script>
 
