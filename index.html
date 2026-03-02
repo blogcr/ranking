@@ -10,7 +10,7 @@ body{
   font-family: Georgia, serif;
   background:#f4f4f4;
   margin:0;
-  padding:30px;
+  padding:20px;
 }
 
 .container{
@@ -20,13 +20,13 @@ body{
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:20px;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:18px;
 }
 
 .card{
   position:relative;
-  height:210px;
+  aspect-ratio: 16 / 10;
   border-radius:12px;
   overflow:hidden;
   background-size:cover;
@@ -34,13 +34,18 @@ body{
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
   color:#fff;
   text-decoration:none;
+  transition:transform .2s ease;
+}
+
+.card:hover{
+  transform:scale(1.02);
 }
 
 .overlay{
   position:absolute;
   inset:0;
   background:linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.15));
-  padding:18px;
+  padding:16px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -48,9 +53,9 @@ body{
 
 .views{
   align-self:flex-end;
-  font-size:13px;
+  font-size:12px;
   background:rgba(0,0,0,0.55);
-  padding:6px 10px;
+  padding:5px 9px;
   border-radius:20px;
 }
 
@@ -64,7 +69,7 @@ body{
   display:inline-block;
   background:#B71C1C;
   padding:6px 10px;
-  font-size:12px;
+  font-size:11px;
   font-weight:bold;
   text-transform:uppercase;
   border-radius:6px;
@@ -72,11 +77,12 @@ body{
 }
 
 .titulo{
-  font-size:17px;
+  font-size:16px;
   line-height:1.3;
   font-weight:600;
 }
 </style>
+
 </head>
 <body>
 
