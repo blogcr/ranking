@@ -45,6 +45,7 @@ h2{
   background-size:cover;
   background-position:center;
   color:#fff;
+  text-decoration:none;
 }
 
 .overlay{
@@ -86,60 +87,44 @@ h2{
 
 <script>
 
-var apiRanking = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
-var feedBlogger = "https://www.carlosromero.com.br/feeds/posts/default?alt=json&max-results=50";
+var api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
 
-Promise.all([
-  fetch(apiRanking).then(r => r.json()),
-  fetch(feedBlogger).then(r => r.json())
-])
-.then(function([ranking, feed]){
+fetch(api)
+  .then(response => response.json())
+  .then(data => {
 
-  var container = document.getElementById("ranking");
-  container.innerHTML = '<div class="grid"></div>';
-  var grid = document.querySelector(".grid");
+    var container = document.getElementById("ranking");
 
-  var posts = feed.feed.entry;
+    if(!data || !data.length){
+      container.innerHTML = "Nenhum resultado encontrado.";
+      return;
+    }
 
-  ranking.forEach(function(item){
+    container.innerHTML = '<div class="grid"></div>';
+    var grid = document.querySelector(".grid");
 
-    var match = posts.find(function(post){
-      var link = post.link.find(l => l.rel === "alternate").href;
-      return link === item.url;
+    data.forEach(function(item){
+
+      var imagem = item.image || "https://via.placeholder.com/800x600?text=Sem+Imagem";
+
+      var card =
+        '<a href="'+ item.url +'" target="_blank" class="card" style="background-image:url('+ imagem +')">' +
+          '<div class="overlay">' +
+            '<div class="autor">'+ item.author +'</div>' +
+            '<div class="titulo">'+ item.title +'</div>' +
+            '<div class="views">'+ item.views +' visualizações</div>' +
+          '</div>' +
+        '</a>';
+
+      grid.innerHTML += card;
+
     });
 
-    if(!match) return;
-
-    var titulo = match.title.$t;
-    var autor = match.author[0].name.$t;
-
-    var imagem = "";
-    if(match.media$thumbnail){
-      imagem = match.media$thumbnail.url.replace("s72-c","s1200");
-    }
-
-    if(!imagem){
-      imagem = "https://via.placeholder.com/800x600?text=Sem+Imagem";
-    }
-
-    var card =
-      '<a href="'+ item.url +'" target="_blank" class="card" style="background-image:url('+ imagem +')">' +
-        '<div class="overlay">' +
-          '<div class="autor">'+ autor +'</div>' +
-          '<div class="titulo">'+ titulo +'</div>' +
-          '<div class="views">'+ item.views +' visualizações</div>' +
-        '</div>' +
-      '</a>';
-
-    grid.innerHTML += card;
-
+  })
+  .catch(() => {
+    document.getElementById("ranking").innerHTML =
+      "<p style='color:#b00'>Erro ao carregar ranking.</p>";
   });
-
-})
-.catch(function(){
-  document.getElementById("ranking").innerHTML =
-    "<p style='color:#b00'>Erro ao carregar ranking.</p>";
-});
 
 </script>
 
