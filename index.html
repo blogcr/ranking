@@ -5,9 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ranking Analytics</title>
 
+<!-- Fonte Arimo -->
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Favicon SVG com R estilizado -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E
+%3Crect width='100' height='100' rx='18' fill='%23B71C1C'/%3E
+%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='Arimo, Arial, sans-serif' font-weight='700'%3ER%3C/text%3E
+%3C/svg%3E">
+
 <style>
+
 body{
-  font-family: Georgia, serif;
+  font-family:'Arimo', sans-serif;
   background:#f4f4f4;
   margin:0;
   padding:20px;
@@ -26,7 +37,7 @@ body{
 
 .card{
   position:relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio:16 / 10;
   border-radius:12px;
   overflow:hidden;
   background-size:cover;
@@ -57,6 +68,7 @@ body{
   background:rgba(0,0,0,0.55);
   padding:5px 9px;
   border-radius:20px;
+  font-weight:600;
 }
 
 .bottom{
@@ -70,7 +82,7 @@ body{
   background:#B71C1C;
   padding:6px 10px;
   font-size:11px;
-  font-weight:bold;
+  font-weight:700;
   text-transform:uppercase;
   border-radius:6px;
   width:fit-content;
@@ -82,7 +94,8 @@ body{
   font-weight:600;
 }
 
-<style>
+/* Modo compacto mobile */
+
 @media (max-width: 768px){
 
   .grid{
@@ -94,8 +107,6 @@ body{
     aspect-ratio:auto;
     height:95px;
     display:flex;
-    background-size:cover;
-    background-position:center;
   }
 
   .overlay{
@@ -127,7 +138,7 @@ body{
   }
 
 }
-</style>
+
 </style>
 
 </head>
@@ -162,7 +173,7 @@ fetch(api)
       var card =
         '<a href="'+ item.url +'" target="_blank" class="card" style="background-image:url('+ imagem +')">' +
           '<div class="overlay">' +
-            '<div class="views">'+ item.views +' visualizações</div>' +
+            '<div class="views">'+ item.views +' usuários</div>' +
             '<div class="bottom">' +
               '<div class="autor">'+ item.author +'</div>' +
               '<div class="titulo">'+ item.title +'</div>' +
