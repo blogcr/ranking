@@ -57,9 +57,6 @@ body{
   inset:0;
   background:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
   padding:18px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end; /* fixa conteúdo embaixo */
 }
 
 .views{
@@ -74,20 +71,26 @@ body{
 }
 
 .bottom{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:18px;
+
+  height:78px; /* ALTURA FIXA PARA TODOS */
   display:flex;
   flex-direction:column;
-  gap:8px;
+  justify-content:flex-start;
 }
 
 .autor{
-  display:inline-block;
   background:#B71C1C;
   padding:7px 12px;
-  font-size:12px;
+  font-size:13px; /* levemente maior */
   font-weight:700;
   text-transform:uppercase;
   border-radius:6px;
   width:fit-content;
+  margin-bottom:8px;
 }
 
 .titulo{
@@ -100,6 +103,7 @@ body{
   -webkit-box-orient:vertical;
   overflow:hidden;
 }
+  
 /* Modo compacto mobile */
 
 @media (max-width: 768px){
