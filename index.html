@@ -179,30 +179,40 @@ fetch(api)
 
     data.slice(0,10).forEach(function(item, index){
 
-      setTimeout(function(){
+      var imagem = item.image
+        ? item.image.replace("s1200","s600")
+        : "https://via.placeholder.com/800x600?text=Sem+Imagem";
 
-        var imagem = item.image
-          ? item.image.replace("s1200","s600")
-          : "https://via.placeholder.com/800x600?text=Sem+Imagem";
+      var card = document.createElement("a");
+      card.href = item.url;
+      card.target = "_blank";
+      card.className = "card";
+      card.style.opacity = "0";
 
-        var card = document.createElement("a");
-        card.href = item.url;
-        card.target = "_blank";
-        card.className = "card fade-in";
+      var img = document.createElement("img");
+      img.src = imagem;
+      img.className = "card-img";
+      img.loading = "lazy";
 
-        card.innerHTML =
-          '<img src="'+ imagem +'" loading="lazy" class="card-img">' +
-          '<div class="overlay">' +
-            '<div class="views">'+ item.views +' visualizações</div>' +
-            '<div class="bottom">' +
-              '<div class="autor">'+ item.author +'</div>' +
-              '<div class="titulo">'+ item.title +'</div>' +
-            '</div>' +
-          '</div>';
+      var overlay = document.createElement("div");
+      overlay.className = "overlay";
 
-        grid.appendChild(card);
+      overlay.innerHTML =
+        '<div class="views">'+ item.views +' visualizações</div>' +
+        '<div class="bottom">' +
+          '<div class="autor">'+ item.author +'</div>' +
+          '<div class="titulo">'+ item.title +'</div>' +
+        '</div>';
 
-      }, index * 120); // intervalo entre aparições
+      card.appendChild(img);
+      card.appendChild(overlay);
+      grid.appendChild(card);
+
+      img.onload = function(){
+        setTimeout(function(){
+          card.classList.add("fade-in");
+        }, index * 120);
+      };
 
     });
 
