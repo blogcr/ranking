@@ -8,11 +8,12 @@
 <!-- Fonte Arimo -->
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap" rel="stylesheet">
 
-<!-- Favicon SVG com R estilizado -->
+<!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
 %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E
 %3Crect width='100' height='100' rx='18' fill='%23B71C1C'/%3E
-%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='Arimo, Arial, sans-serif' font-weight='700'%3ER%3C/text%3E
+%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='white'
+font-family='Arimo, Arial, sans-serif' font-weight='700'%3ER%3C/text%3E
 %3C/svg%3E">
 
 <style>
@@ -37,19 +38,24 @@ body{
 
 .card{
   position:relative;
-  aspect-ratio:16 / 10;
+  aspect-ratio:16/10;
   border-radius:12px;
   overflow:hidden;
-  background-size:cover;
-  background-position:center;
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
-  color:#fff;
   text-decoration:none;
+  display:block;
   transition:transform .2s ease;
 }
 
 .card:hover{
   transform:scale(1.02);
+}
+
+.card-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
 }
 
 .overlay{
@@ -68,6 +74,7 @@ body{
   padding:6px 10px;
   border-radius:20px;
   font-weight:600;
+  color:#fff;
 }
 
 .bottom{
@@ -75,83 +82,65 @@ body{
   left:18px;
   right:18px;
   bottom:18px;
-
-  height:78px; /* ALTURA FIXA PARA TODOS */
+  height:82px;
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
 }
 
 .autor{
   background:#B71C1C;
   padding:7px 12px;
-  font-size:13px; /* levemente maior */
+  font-size:13px;
   font-weight:700;
   text-transform:uppercase;
   border-radius:6px;
   width:fit-content;
   margin-bottom:8px;
+  color:#fff;
 }
 
 .titulo{
   font-size:18px;
   line-height:1.25;
   font-weight:600;
+  color:#fff;
 
   display:-webkit-box;
   -webkit-line-clamp:2;
   -webkit-box-orient:vertical;
   overflow:hidden;
 }
-  
-/* Modo compacto mobile */
 
-@media (max-width: 768px){
+/* Mobile compacto */
+
+@media (max-width:768px){
 
   .grid{
     grid-template-columns:1fr;
-    gap:12px;
   }
 
   .card{
     aspect-ratio:auto;
     height:95px;
-    display:flex;
-  }
-
-  .overlay{
-    background:rgba(0,0,0,0.55);
-    flex-direction:row;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px;
   }
 
   .bottom{
-    gap:4px;
-  }
-
-  .autor{
-    font-size:10px;
-    padding:4px 8px;
+    height:auto;
   }
 
   .titulo{
     font-size:14px;
-    line-height:1.2;
-    max-width:220px;
   }
 
-  .views{
+  .autor{
     font-size:11px;
-    padding:4px 8px;
   }
 
 }
 
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
@@ -178,12 +167,15 @@ fetch(api)
 
     data.slice(0,10).forEach(function(item){
 
-      var imagem = item.image || "https://via.placeholder.com/800x600?text=Sem+Imagem";
+      var imagem = item.image
+        ? item.image.replace("s1200","s600")
+        : "https://via.placeholder.com/800x600?text=Sem+Imagem";
 
       var card =
-        '<a href="'+ item.url +'" target="_blank" class="card" style="background-image:url('+ imagem +')">' +
+        '<a href="'+ item.url +'" target="_blank" class="card">' +
+          '<img src="'+ imagem +'" loading="lazy" class="card-img">' +
           '<div class="overlay">' +
-            '<div class="views">'+ item.views +' usuários</div>' +
+            '<div class="views">'+ item.views +' visualizações</div>' +
             '<div class="bottom">' +
               '<div class="autor">'+ item.author +'</div>' +
               '<div class="titulo">'+ item.title +'</div>' +
