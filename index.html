@@ -18,13 +18,12 @@
   }
 
   .container {
-    max-width: 1350px;
     margin: auto;
   }
 
   .grid {
     display: grid;
-    /* Retomando as 5 colunas conforme as imagens enviadas */
+    /* Força 5 colunas no desktop */
     grid-template-columns: repeat(5, 1fr); 
     gap: 18px;
   }
@@ -38,7 +37,6 @@
     display: block;
     transition: transform .2s ease;
     background: #000;
-    aspect-ratio: 16/11;
   }
 
   .card:hover { transform: scale(1.02); }
@@ -53,22 +51,18 @@
   .overlay {
     position: absolute;
     inset: 0;
-    /* Gradiente focado na base para leitura do título */
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 80%);
+    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
     padding: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
   }
 
-  /* Números do Ranking: Ajustados para não encostar na borda superior */
+  /* Números: Discretos, respeitando as bordas e visíveis */
   .ranking-number {
     position: absolute;
-    top: 15px; /* Espaço da borda superior */
+    top: 12px;
     left: 18px;
-    font-size: 40px;
+    font-size: 38px;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.35); /* Opacidade equilibrada para visibilidade */
+    color: rgba(255, 255, 255, 0.2);
     line-height: 1;
     z-index: 1;
     pointer-events: none;
@@ -78,8 +72,8 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    font-size: 12px;
-    background: rgba(0,0,0,0.7);
+    font-size: 13px;
+    background: rgba(0,0,0,0.65);
     padding: 6px 10px;
     border-radius: 20px;
     font-weight: 600;
@@ -87,32 +81,39 @@
     z-index: 2;
   }
 
+  /* Altura fixa para garantir que os nomes dos autores fiquem alinhados */
   .bottom {
-    position: relative;
-    z-index: 2;
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    height: 82px; /* Mantém a altura original para alinhar as tarjas */
+    display: flex;
+    flex-direction: column;
   }
 
   .autor {
     background: #B71C1C;
     padding: 7px 12px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 6px;
-    color: #fff;
+    width: fit-content;
     margin-bottom: 8px;
+    color: #fff;
     
-    /* Manter uma linha com reticências */
-    display: block;
+    /* Regras de linha única */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 92%;
+    display: block;
+    max-width: 100%;
     box-sizing: border-box;
   }
 
   .titulo {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.25;
     font-weight: 600;
     color: #fff;
@@ -122,12 +123,15 @@
     overflow: hidden;
   }
 
-  /* Mobile */
-  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  /* Responsividade */
+  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 768px) {
     .grid { grid-template-columns: 1fr; }
-    .card { height: 95px; aspect-ratio: auto; }
-    .ranking-number { font-size: 32px; top: 10px; }
+    .card { height: 95px; }
+    .bottom { height: auto; position: absolute; }
+    .titulo { font-size: 14px; }
+    .autor { font-size: 11px; }
+    .ranking-number { font-size: 28px; top: 10px; }
   }
 
   .fade-in {
@@ -164,7 +168,6 @@
       var grid = container.querySelector(".grid");
 
       data.slice(0, 10).forEach(function(item, index){
-        // Restaura a lógica da imagem placeholder
         var imagem = item.image
           ? item.image.replace("s1200","s600")
           : "https://via.placeholder.com/800x600?text=Sem+Imagem";
@@ -175,10 +178,11 @@
         card.className = "card";
         card.style.opacity = "0";
 
+        // Template com a numeração e estrutura de dados original
         card.innerHTML = `
           <div class="ranking-number">${index + 1}</div>
           <div class="views">${item.views} visualizações</div>
-          <img src="${imagem}" class="card-img" loading="lazy" onload="setTimeout(() => this.parentElement.classList.add('fade-in'), ${index * 100})">
+          <img src="${imagem}" class="card-img" loading="lazy">
           <div class="overlay">
             <div class="bottom">
               <div class="autor">${item.author}</div>
@@ -188,6 +192,14 @@
         `;
 
         grid.appendChild(card);
+
+        // Gatilho de animação baseado no carregamento da imagem
+        const img = card.querySelector('.card-img');
+        img.onload = function() {
+          setTimeout(function() {
+            card.classList.add("fade-in");
+          }, index * 120);
+        };
       });
     })
     .catch(function(err){
@@ -196,172 +208,5 @@
     });
 </script>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking Analytics - v3</title>
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-<style>
-  body {
-    font-family: 'Arimo', sans-serif;
-    background: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-  }
-
-  .container {
-    max-width: 1350px; /* Ajustado para 5 cards de ~250px */
-    margin: auto;
-  }
-
-  .grid {
-    display: grid;
-    /* Força exatamente 5 colunas em telas grandes */
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 15px;
-  }
-
-  .card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    text-decoration: none;
-    display: block;
-    aspect-ratio: 16/11; /* Mantém proporção consistente */
-    background: #000;
-    transition: transform 0.2s ease;
-  }
-
-  .card:hover { transform: scale(1.02); }
-
-  .card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Overlay: Escurece apenas o necessário para o texto */
-  .overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  /* Números: Menores, com margem e cor visível */
-  .ranking-number {
-    position: absolute;
-    top: 12px;
-    left: 15px;
-    font-size: 42px; /* Reduzido para não brigar com o layout */
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.3); /* Mais visível que a versão anterior */
-    line-height: 1;
-    z-index: 2;
-  }
-
-  /* Visualizações: Escuro para contraste total */
-  .views {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 11px;
-    background: rgba(0,0,0,0.75);
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-weight: 700;
-    color: #fff;
-    z-index: 3;
-  }
-
-  .autor {
-    background: #B71C1C;
-    padding: 5px 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 4px;
-    color: #fff;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 90%;
-    margin-bottom: 6px;
-  }
-
-  .titulo {
-    font-size: 15px;
-    line-height: 1.2;
-    font-weight: 700;
-    color: #fff;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Responsividade */
-  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 768px) { 
-    .grid { grid-template-columns: 1fr; }
-    .card { height: 100px; aspect-ratio: auto; }
-  }
-
-  .fade-in {
-    animation: fadeUp 0.5s ease forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-</style>
-</head>
-
-<body>
-<div class="container">
-  <div id="ranking"></div>
-</div>
-
-<script>
-  const api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
-  const container = document.getElementById("ranking");
-
-  fetch(api)
-    .then(r => r.json())
-    .then(data => {
-      container.innerHTML = '<div class="grid"></div>';
-      const grid = container.querySelector(".grid");
-
-      data.slice(0, 10).forEach((item, index) => {
-        const card = document.createElement("a");
-        card.href = item.url;
-        card.target = "_blank";
-        card.className = "card fade-in";
-        card.style.animationDelay = `${index * 0.05}s`;
-
-        card.innerHTML = `
-          <div class="ranking-number">${index + 1}</div>
-          <div class="views">${item.views} visualizações</div>
-          <img src="${item.image ? item.image.replace("s1200","s600") : ''}" class="card-img" loading="lazy">
-          <div class="overlay">
-            <div class="autor">${item.author}</div>
-            <div class="titulo">${item.title}</div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    });
-</script>
 </body>
 </html>
