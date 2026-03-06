@@ -17,13 +17,10 @@
     padding: 20px;
   }
 
-  .container {
-    margin: auto;
-  }
+  .container { margin: auto; }
 
   .grid {
     display: grid;
-    /* Força 5 colunas no desktop */
     grid-template-columns: repeat(5, 1fr); 
     gap: 18px;
   }
@@ -55,7 +52,6 @@
     padding: 18px;
   }
 
-  /* Números: Discretos, respeitando as bordas e visíveis */
   .ranking-number {
     position: absolute;
     top: 12px;
@@ -81,15 +77,16 @@
     z-index: 2;
   }
 
-  /* Altura fixa para garantir que os nomes dos autores fiquem alinhados */
+  /* Altura fixa para manter as tarjas alinhadas horizontalmente entre os cards */
   .bottom {
     position: absolute;
     left: 18px;
     right: 18px;
     bottom: 18px;
-    height: 82px; /* Mantém a altura original para alinhar as tarjas */
+    height: 82px; 
     display: flex;
     flex-direction: column;
+    justify-content: flex-end; /* Garante que o conteúdo comece da base para cima */
   }
 
   .autor {
@@ -99,17 +96,18 @@
     font-weight: 700;
     text-transform: uppercase;
     border-radius: 6px;
-    width: fit-content;
-    margin-bottom: 8px;
     color: #fff;
+    margin-bottom: 8px;
+
+    /* COMPORTAMENTO CORRIGIDO: amolda-se ao texto */
+    width: fit-content; 
+    max-width: 100%;
+    box-sizing: border-box;
     
-    /* Regras de linha única */
+    /* Previne quebra de linha no nome */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: block;
-    max-width: 100%;
-    box-sizing: border-box;
   }
 
   .titulo {
@@ -123,14 +121,22 @@
     overflow: hidden;
   }
 
-  /* Responsividade */
-  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 768px) {
+  /* Mobile Corrigido */
+  @media (max-width: 768px){
     .grid { grid-template-columns: 1fr; }
     .card { height: 95px; }
-    .bottom { height: auto; position: absolute; }
+    .bottom { 
+      height: 65px; /* Altura ajustada para o card menor do mobile */
+      bottom: 12px;
+      left: 15px;
+      right: 15px;
+    }
     .titulo { font-size: 14px; }
-    .autor { font-size: 11px; }
+    .autor { 
+      font-size: 11px; 
+      padding: 5px 10px; 
+      width: fit-content; /* Garante que não fique longo/vazio no mobile */
+    }
     .ranking-number { font-size: 28px; top: 10px; }
   }
 
@@ -140,9 +146,7 @@
     animation: fadeUp 0.6s ease forwards;
   }
 
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 
@@ -168,9 +172,7 @@
       var grid = container.querySelector(".grid");
 
       data.slice(0, 10).forEach(function(item, index){
-        var imagem = item.image
-          ? item.image.replace("s1200","s600")
-          : "https://via.placeholder.com/800x600?text=Sem+Imagem";
+        var imagem = item.image ? item.image.replace("s1200","s600") : "https://via.placeholder.com/800x600?text=Sem+Imagem";
 
         var card = document.createElement("a");
         card.href = item.url;
@@ -178,7 +180,6 @@
         card.className = "card";
         card.style.opacity = "0";
 
-        // Template com a numeração e estrutura de dados original
         card.innerHTML = `
           <div class="ranking-number">${index + 1}</div>
           <div class="views">${item.views} visualizações</div>
@@ -193,12 +194,9 @@
 
         grid.appendChild(card);
 
-        // Gatilho de animação baseado no carregamento da imagem
         const img = card.querySelector('.card-img');
         img.onload = function() {
-          setTimeout(function() {
-            card.classList.add("fade-in");
-          }, index * 120);
+          setTimeout(() => card.classList.add("fade-in"), index * 120);
         };
       });
     })
