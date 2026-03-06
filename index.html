@@ -3,153 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking Analytics</title>
+<title>Ranking Analytics Moderno</title>
 
-<!-- Fonte Arimo -->
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap" rel="stylesheet">
-
-<!-- Favicon -->
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-
-body{
-  font-family:'Arimo', sans-serif;
-  background:#f4f4f4;
-  margin:20px 0;
-  padding:20px;
-}
-
-.container{
-  /* max-width:1300px; */
-  margin:auto;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
-  gap:18px;
-}
-
-.card{
-  position:relative;
-  /* aspect-ratio:16/10; */
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08);
-  text-decoration:none;
-  display:block;
-  transition:transform .2s ease;
-}
-
-.card:hover{
-  transform:scale(1.02);
-}
-
-.card-img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.overlay{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
-  padding:18px;
-}
-
-.views{
-  position:absolute;
-  top:12px;
-  right:12px;
-  font-size:13px;
-  background:rgba(0,0,0,0.65);
-  padding:6px 10px;
-  border-radius:20px;
-  font-weight:600;
-  color:#fff;
-}
-
-.bottom{
-  position:absolute;
-  left:18px;
-  right:18px;
-  bottom:18px;
-  height:82px;
-  display:flex;
-  flex-direction:column;
-}
-
-.autor{
-  background:#B71C1C;
-  padding:7px 12px;
-  font-size:12px;
-  font-weight:700;
-  text-transform:uppercase;
-  border-radius:6px;
-  width:fit-content;
-  margin-bottom:8px;
-  color:#fff;
-  white-space: nowrap;     /* Impede que o texto pule para a linha de baixo */
-  overflow: hidden;        /* Esconde o que sobrar se o espaço acabar */
-  text-overflow: ellipsis; /* Adiciona "..." caso o nome seja longo demais */
-  display: block;          /* Garante que o elemento se comporte como bloco */
-}
-
-.titulo{
-  font-size:18px;
-  line-height:1.25;
-  font-weight:600;
-  color:#fff;
-
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-/* Mobile compacto */
-
-@media (max-width:768px){
-
-  .grid{
-    grid-template-columns:1fr;
+  body {
+    font-family: 'Arimo', sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 40px 20px;
   }
 
-  .card{
-    aspect-ratio:auto;
-    height:95px;
+  .container {
+    max-width: 1400px;
+    margin: auto;
   }
 
-  .bottom{
-    height:auto;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
   }
 
-  .titulo{
-    font-size:14px;
+  .card {
+    position: relative;
+    border-radius: 16px; /* Bordas mais arredondadas e modernas */
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: #1a1a1a;
+    height: 200px; /* Altura fixa para manter o grid alinhado */
   }
 
-  .autor{
-    font-size:11px;
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
   }
 
-}
-
-.fade-in{
-  opacity:0;
-  transform:translateY(15px);
-  animation:fadeUp 0.6s ease forwards;
-}
-
-@keyframes fadeUp{
-  to{
-    opacity:1;
-    transform:translateY(0);
+  .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
   }
-}
 
+  .card:hover .card-img {
+    transform: scale(1.05);
+  }
+
+  /* Overlay Moderno: Gradiente Suave */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    /* Gradiente mais rico: começa transparente e ganha peso apenas onde o texto reside */
+    background: linear-gradient(
+      to bottom, 
+      rgba(0,0,0,0) 0%, 
+      rgba(0,0,0,0.2) 40%, 
+      rgba(0,0,0,0.6) 70%, 
+      rgba(0,0,0,0.9) 100%
+    );
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .ranking-number {
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    font-size: 90px;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.1);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+    z-index: 1;
+    pointer-events: none;
+    line-height: 0.8;
+  }
+
+  .views {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px); /* Efeito de vidro moderno */
+    -webkit-backdrop-filter: blur(8px);
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-weight: 600;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 2;
+  }
+
+  .bottom {
+    position: relative;
+    z-index: 2;
+  }
+
+  .autor {
+    background: #d32f2f; /* Vermelho um pouco mais vibrante e moderno */
+    padding: 6px 14px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block; /* Ajusta ao tamanho do texto */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 95%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .titulo {
+    font-size: 19px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Ajuda na leitura sobre imagens claras */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .grid { gap: 16px; }
+    .card { height: 160px; border-radius: 12px; }
+    .ranking-number { font-size: 65px; }
+    .titulo { font-size: 16px; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 
@@ -160,67 +165,50 @@ body{
 </div>
 
 <script>
+  const api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
+  const container = document.getElementById("ranking");
 
-var api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
+  fetch(api)
+    .then(response => response.json())
+    .then(data => {
+      if(!data || data.length === 0) {
+        container.innerHTML = "Nenhum resultado disponível.";
+        return;
+      }
 
-var container = document.getElementById("ranking");
-container.innerHTML = '<div class="grid"></div>';
-var grid = document.querySelector(".grid");
+      container.innerHTML = '<div class="grid"></div>';
+      const grid = container.querySelector(".grid");
 
-fetch(api)
-  .then(response => response.json())
-  .then(data => {
+      data.slice(0, 10).forEach((item, index) => {
+        const imagem = item.image 
+          ? item.image.replace("s1200", "s600") 
+          : "https://via.placeholder.com/600x400?text=Sem+Imagem";
 
-    if(!data || data.length === 0){
-      container.innerHTML = "Nenhum resultado.";
-      return;
-    }
+        const card = document.createElement("a");
+        card.href = item.url;
+        card.target = "_blank";
+        card.className = "card fade-in";
+        card.style.animationDelay = `${index * 0.1}s`;
 
-    data.slice(0,10).forEach(function(item, index){
+        card.innerHTML = `
+          <div class="ranking-number">${index + 1}</div>
+          <div class="views">${item.views} visualizações</div>
+          <img src="${imagem}" class="card-img" alt="${item.title}" loading="lazy">
+          <div class="overlay">
+            <div class="bottom">
+              <div class="autor">${item.author}</div>
+              <div class="titulo">${item.title}</div>
+            </div>
+          </div>
+        `;
 
-      var imagem = item.image
-        ? item.image.replace("s1200","s600")
-        : "https://via.placeholder.com/800x600?text=Sem+Imagem";
-
-      var card = document.createElement("a");
-      card.href = item.url;
-      card.target = "_blank";
-      card.className = "card";
-      card.style.opacity = "0";
-
-      var img = document.createElement("img");
-      img.src = imagem;
-      img.className = "card-img";
-      img.loading = "lazy";
-
-      var overlay = document.createElement("div");
-      overlay.className = "overlay";
-
-      overlay.innerHTML =
-        '<div class="views">'+ item.views +' visualizações</div>' +
-        '<div class="bottom">' +
-          '<div class="autor">'+ item.author +'</div>' +
-          '<div class="titulo">'+ item.title +'</div>' +
-        '</div>';
-
-      card.appendChild(img);
-      card.appendChild(overlay);
-      grid.appendChild(card);
-
-      img.onload = function(){
-        setTimeout(function(){
-          card.classList.add("fade-in");
-        }, index * 120);
-      };
-
+        grid.appendChild(card);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      container.innerHTML = "<p style='color:#b00; text-align:center;'>Erro ao carregar os dados.</p>";
     });
-
-  })
-  .catch(function(){
-    container.innerHTML =
-      "<p style='color:#b00'>Erro ao carregar ranking.</p>";
-  });
-
 </script>
 
 </body>
