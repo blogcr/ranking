@@ -92,6 +92,10 @@ body{
   width:fit-content;
   margin-bottom:8px;
   color:#fff;
+  white-space: nowrap;     /* Impede que o texto pule para a linha de baixo */
+  overflow: hidden;        /* Esconde o que sobrar se o espaço acabar */
+  text-overflow: ellipsis; /* Adiciona "..." caso o nome seja longo demais */
+  display: block;          /* Garante que o elemento se comporte como bloco */
 }
 
 .titulo{
