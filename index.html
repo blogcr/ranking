@@ -23,7 +23,6 @@
 
   .grid {
     display: grid;
-    /* Força 5 colunas no desktop */
     grid-template-columns: repeat(5, 1fr); 
     gap: 18px;
   }
@@ -55,7 +54,6 @@
     padding: 18px;
   }
 
-  /* Números: Discretos, respeitando as bordas e visíveis */
   .ranking-number {
     position: absolute;
     top: 12px;
@@ -81,13 +79,12 @@
     z-index: 2;
   }
 
-  /* Altura fixa para garantir que os nomes dos autores fiquem alinhados */
   .bottom {
     position: absolute;
     left: 18px;
     right: 18px;
     bottom: 18px;
-    height: 82px; /* Mantém a altura original para alinhar as tarjas */
+    height: 82px;
     display: flex;
     flex-direction: column;
   }
@@ -102,8 +99,6 @@
     width: fit-content;
     margin-bottom: 8px;
     color: #fff;
-    
-    /* Regras de linha única */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -123,22 +118,36 @@
     overflow: hidden;
   }
 
+  /* Estilo da Data */
+  .data-postagem {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+  }
+
   /* Responsividade */
   @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 768px) {
     .grid { grid-template-columns: 1fr; }
     .card { height: 95px; }
     .bottom { height: auto; position: absolute; }
-    .titulo { font-size: 14px; }
+    .titulo { font-size: 14px; padding-right: 60px; } /* Espaço para a data não sobrepor o título curto */
     .autor { font-size: 11px; }
     
-    /* Alteração solicitada: Canto inferior direito no celular */
     .ranking-number { 
       font-size: 28px; 
       top: auto; 
       left: auto; 
       bottom: 10px; 
       right: 15px; 
+      display: none; /* Opcional: remover o número se a data ocupar o mesmo espaço */
+    }
+
+    .data-postagem {
+      bottom: 2px;
     }
   }
 
@@ -186,7 +195,7 @@
         card.className = "card";
         card.style.opacity = "0";
 
-        // Template com a numeração e estrutura de dados original
+        // Template com a inclusão da data no rodapé
         card.innerHTML = `
           <div class="ranking-number">${index + 1}</div>
           <div class="views">${item.views} visualizações</div>
@@ -195,13 +204,13 @@
             <div class="bottom">
               <div class="autor">${item.author}</div>
               <div class="titulo">${item.title}</div>
+              <div class="data-postagem">${item.date || ''}</div>
             </div>
           </div>
         `;
 
         grid.appendChild(card);
 
-        // Gatilho de animação baseado no carregamento da imagem
         const img = card.querySelector('.card-img');
         img.onload = function() {
           setTimeout(function() {
