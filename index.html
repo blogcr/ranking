@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Ranking Analytics</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -10,224 +13,281 @@
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
 <style>
-  body {
-    font-family: 'Arimo', sans-serif;
-    background: #f4f4f4;
-    margin: 20px 0;
-    padding: 20px;
-  }
 
-  .container {
-    margin: auto;
-  }
+body{
+font-family:'Arimo',sans-serif;
+background:#f4f4f4;
+margin:20px 0;
+padding:20px;
+}
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 18px;
-  }
+.container{
+margin:auto;
+}
 
-  .card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    text-decoration: none;
-    display: block;
-    transition: transform .2s ease;
-    background: #000;
-  }
+.grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:18px;
+}
 
-  .card:hover { transform: scale(1.02); }
+.card{
+position:relative;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+text-decoration:none;
+display:block;
+transition:transform .2s ease;
+background:#000;
+}
 
-  .card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+.card:hover{
+transform:scale(1.02);
+}
 
-  .overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.15));
-    padding: 18px;
-  }
+.card-img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
 
-  /* Desktop: Canto superior esquerdo */
-  .ranking-number {
-    position: absolute;
-    top: 12px;
-    left: 18px;
-    font-size: 38px;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.2);
-    line-height: 1;
-    z-index: 1;
-    pointer-events: none;
-  }
+.overlay{
+position:absolute;
+inset:0;
+background:linear-gradient(to top,rgba(0,0,0,0.85),rgba(0,0,0,0.15));
+padding:18px;
+}
 
-  .views {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 13px;
-    background: rgba(0,0,0,0.65);
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-weight: 600;
-    color: #fff;
-    z-index: 2;
-  }
+.ranking-number{
+position:absolute;
+top:12px;
+left:18px;
+font-size:38px;
+font-weight:900;
+color:rgba(255,255,255,0.2);
+line-height:1;
+z-index:1;
+pointer-events:none;
+}
 
-  .bottom {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    bottom: 18px;
-    height: 82px; 
-    display: flex;
-    flex-direction: column;
-  }
+.views{
+position:absolute;
+top:12px;
+right:12px;
+font-size:13px;
+background:rgba(0,0,0,0.65);
+padding:6px 10px;
+border-radius:20px;
+font-weight:600;
+color:#fff;
+z-index:2;
+}
 
-  .autor {
-    background: #B71C1C;
-    padding: 7px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    border-radius: 6px;
-    width: fit-content;
-    margin-bottom: 8px;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
+.bottom{
+position:absolute;
+left:18px;
+right:18px;
+bottom:18px;
+height:82px;
+display:flex;
+flex-direction:column;
+}
 
-  .titulo {
-    font-size: 18px;
-    line-height: 1.25;
-    font-weight: 600;
-    color: #fff;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+.autor{
+background:#B71C1C;
+padding:7px 12px;
+font-size:12px;
+font-weight:700;
+text-transform:uppercase;
+border-radius:6px;
+width:fit-content;
+margin-bottom:8px;
+color:#fff;
 
-  /* Estilo da Data: pequena e no rodapé direito */
-  .data-postagem {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 400;
-    text-transform: lowercase;
-  }
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+max-width:100%;
+}
 
-  /* Responsividade */
-  @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 768px) {
-    .grid { grid-template-columns: 1fr; }
-    .card { height: 95px; }
-    .bottom { height: auto; position: absolute; }
-    .titulo { font-size: 14px; padding-right: 70px; }
-    .autor { font-size: 11px; }
-    
-    /* Celular: Canto inferior direito */
-    .ranking-number { 
-      font-size: 28px; 
-      top: auto; 
-      left: auto; 
-      bottom: 10px; 
-      right: 15px; 
-    }
+.titulo{
+font-size:18px;
+line-height:1.25;
+font-weight:600;
+color:#fff;
 
-    .data-postagem {
-      bottom: 2px;
-      right: 0;
-      /* Evita conflito com o número do ranking no mobile */
-      margin-right: 45px; 
-    }
-  }
+display:-webkit-box;
+-webkit-line-clamp:2;
+-webkit-box-orient:vertical;
+overflow:hidden;
+}
 
-  .fade-in {
-    opacity: 0;
-    transform: translateY(15px);
-    animation: fadeUp 0.6s ease forwards;
-  }
+.data-postagem{
+position:absolute;
+right:0;
+bottom:0;
+font-size:10px;
+color:rgba(255,255,255,0.6);
+font-weight:400;
+text-transform:lowercase;
+}
 
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* responsividade */
+
+@media(max-width:1200px){
+.grid{grid-template-columns:repeat(3,1fr);}
+}
+
+@media(max-width:768px){
+
+.grid{grid-template-columns:1fr;}
+
+.card{height:95px;}
+
+.bottom{height:auto;}
+
+.titulo{
+font-size:14px;
+padding-right:70px;
+}
+
+.autor{
+font-size:11px;
+}
+
+.ranking-number{
+font-size:28px;
+top:auto;
+left:auto;
+bottom:10px;
+right:15px;
+}
+
+.data-postagem{
+bottom:2px;
+right:0;
+margin-right:45px;
+}
+
+}
+
+/* animação */
+
+.fade-in{
+opacity:0;
+transform:translateY(15px);
+animation:fadeUp .6s ease forwards;
+}
+
+@keyframes fadeUp{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
-  <div id="ranking">Carregando...</div>
+<div id="ranking">Carregando...</div>
 </div>
 
 <script>
-  var api = "https://script.google.com/macros/s/AKfycbxK-fkKQsnO4i6ZWXBG3OCX2tKlbbVl_IR-ob-H10kEIwr_qm6SZQBcwjjyp0zOZfqCFg/exec";
-  var container = document.getElementById("ranking");
 
-  fetch(api)
-    .then(response => response.json())
-    .then(data => {
-      if(!data || data.length === 0){
-        container.innerHTML = "Nenhum resultado.";
-        return;
-      }
+var api="https://script.google.com/macros/s/AKfycbxJkEccCVZOs4qOV45g6L_sjKH2L0US0Vpq2j8pWzyca4a8IpSbpCfuaLtKJYGtqxg/exec?tipo=ranking";
 
-      container.innerHTML = '<div class="grid"></div>';
-      var grid = container.querySelector(".grid");
+var container=document.getElementById("ranking");
 
-      data.slice(0, 10).forEach(function(item, index){
-        var imagem = item.image
-          ? item.image.replace("s1200","s600")
-          : "https://via.placeholder.com/800x600?text=Sem+Imagem";
+function formatarData(data){
 
-        var card = document.createElement("a");
-        card.href = item.url;
-        card.target = "_blank";
-        card.className = "card";
-        card.style.opacity = "0";
+if(!data) return "";
 
-        // Adicionada a div da data no final do container 'bottom'
-        card.innerHTML = `
-          <div class="ranking-number">${index + 1}</div>
-          <div class="views">${item.views} visualizações</div>
-          <img src="${imagem}" class="card-img" loading="lazy">
-          <div class="overlay">
-            <div class="bottom">
-              <div class="autor">${item.author}</div>
-              <div class="titulo">${item.title}</div>
-              <div class="data-postagem">${item.date || ''}</div>
-            </div>
-          </div>
-        `;
+var partes=data.split(" ");
 
-        grid.appendChild(card);
+var dias={
+Sun:"dom",
+Mon:"seg",
+Tue:"ter",
+Wed:"qua",
+Thu:"qui",
+Fri:"sex",
+Sat:"sáb"
+};
 
-        const img = card.querySelector('.card-img');
-        img.onload = function() {
-          setTimeout(function() {
-            card.classList.add("fade-in");
-          }, index * 120);
-        };
-      });
-    })
-    .catch(function(err){
-      console.error(err);
-      container.innerHTML = "<p style='color:#b00'>Erro ao carregar ranking.</p>";
-    });
+var meses={
+Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,
+Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12
+};
+
+var dia=partes[2];
+var mes=meses[partes[1]];
+
+return dias[partes[0]]+", "+dia+"."+mes+".26";
+
+}
+
+fetch(api)
+.then(response=>response.json())
+.then(data=>{
+
+if(!data || data.length===0){
+container.innerHTML="Nenhum resultado.";
+return;
+}
+
+container.innerHTML='<div class="grid"></div>';
+var grid=container.querySelector(".grid");
+
+data.slice(0,10).forEach(function(item,index){
+
+var imagem=item.imagem
+? item.imagem.replace(/\/w\d+-h\d+[^/]*\//,"/w800/")
+: "";
+
+var card=document.createElement("a");
+
+card.href=item.url;
+card.target="_blank";
+card.className="card";
+
+card.innerHTML=`
+<div class="ranking-number">${index+1}</div>
+
+<div class="views">${item.visualizacoes} visualizações</div>
+
+<img src="${imagem}" class="card-img" loading="lazy">
+
+<div class="overlay">
+
+<div class="bottom">
+<div class="autor">${item.autor}</div>
+<div class="titulo">${item.titulo}</div>
+<div class="data-postagem">${formatarData(item.publicacao)}</div>
+</div>
+
+</div>
+`;
+
+grid.appendChild(card);
+
+setTimeout(function(){
+card.classList.add("fade-in");
+},index*120);
+
+});
+
+})
+.catch(function(err){
+console.error(err);
+container.innerHTML="<p style='color:#b00'>Erro ao carregar ranking.</p>";
+});
+
 </script>
 
 </body>
