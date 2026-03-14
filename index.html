@@ -72,17 +72,29 @@ z-index:1;
 pointer-events:none;
 }
 
+/* indicador de pontuação */
+
 .views{
 position:absolute;
 top:12px;
 right:12px;
-font-size:13px;
 background:rgba(0,0,0,0.65);
-padding:6px 10px;
+padding:8px 12px;
 border-radius:20px;
-font-weight:600;
 color:#fff;
+text-align:right;
 z-index:2;
+}
+
+.points{
+font-size:14px;
+font-weight:700;
+line-height:1.1;
+}
+
+.views-count{
+font-size:11px;
+opacity:.85;
 }
 
 .bottom{
@@ -124,10 +136,12 @@ display:-webkit-box;
 overflow:hidden;
 }
 
+/* data levemente mais baixa */
+
 .data-postagem{
 position:absolute;
 right:0;
-bottom:0;
+bottom:-6px;
 font-size:10px;
 color:rgba(255,255,255,0.6);
 font-weight:400;
@@ -166,7 +180,7 @@ right:15px;
 }
 
 .data-postagem{
-bottom:2px;
+bottom:-2px;
 right:0;
 margin-right:45px;
 }
@@ -259,7 +273,10 @@ card.className="card";
 card.innerHTML=`
 <div class="ranking-number">${index+1}</div>
 
-<div class="views">${item.visualizacoes} visualizações</div>
+<div class="views">
+<div class="points">${item.pontuacao} pontos</div>
+<div class="views-count">${item.visualizacoes} visualizações</div>
+</div>
 
 <img src="${imagem}" class="card-img" loading="lazy">
 
