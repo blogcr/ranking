@@ -224,27 +224,33 @@ function formatarData(data){
 
 if(!data) return "";
 
-var partes=data.split(" ");
+var partes=data.split("-");
 
-var dias={
-Sun:"dom",
-Mon:"seg",
-Tue:"ter",
-Wed:"qua",
-Thu:"qui",
-Fri:"sex",
-Sat:"sáb"
-};
+if(partes.length!==3) return "";
 
-var meses={
-Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,
-Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12
-};
+var ano=partes[0].substring(2);
+var mes=Number(partes[1]);
+var dia=Number(partes[2]);
 
-var dia=partes[2];
-var mes=meses[partes[1]];
+var dataObj=new Date(
+  Number(partes[0]),
+  mes-1,
+  dia
+);
 
-return dias[partes[0]]+", "+dia+"."+mes+".26";
+var dias=[
+  "dom",
+  "seg",
+  "ter",
+  "qua",
+  "qui",
+  "sex",
+  "sáb"
+];
+
+var diaSemana=dias[dataObj.getDay()];
+
+return diaSemana+", "+dia+"."+mes+"."+ano;
 
 }
 
