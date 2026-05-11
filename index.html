@@ -42,6 +42,7 @@ text-decoration:none;
 display:block;
 transition:transform .2s ease;
 background:#000;
+height:320px;
 }
 
 .card:hover{
@@ -53,6 +54,7 @@ width:100%;
 height:100%;
 object-fit:cover;
 display:block;
+background:#222;
 }
 
 .overlay{
@@ -73,8 +75,6 @@ line-height:1;
 z-index:1;
 pointer-events:none;
 }
-
-/* indicador de pontuação */
 
 .views{
 position:absolute;
@@ -138,8 +138,6 @@ display:-webkit-box;
 overflow:hidden;
 }
 
-/* data levemente mais baixa */
-
 .data-postagem{
 position:absolute;
 right:0;
@@ -150,8 +148,6 @@ font-weight:400;
 text-transform:lowercase;
 }
 
-/* responsividade */
-
 @media(max-width:1200px){
 .grid{grid-template-columns:repeat(3,1fr);}
 }
@@ -160,9 +156,13 @@ text-transform:lowercase;
 
 .grid{grid-template-columns:1fr;}
 
-.card{height:95px;}
+.card{
+height:95px;
+}
 
-.bottom{height:auto;}
+.bottom{
+height:auto;
+}
 
 .titulo{
 font-size:14px;
@@ -188,8 +188,6 @@ margin-right:45px;
 }
 
 }
-
-/* animação */
 
 .fade-in{
 opacity:0;
@@ -224,40 +222,55 @@ function formatarData(data){
 
 if(!data) return "";
 
-var partes=data.split(" ");
+try{
 
-var dias={
-Sun:"dom",
-Mon:"seg",
-Tue:"ter",
-Wed:"qua",
-Thu:"qui",
-Fri:"sex",
-Sat:"sáb"
-};
+var d=new Date(data);
 
-var meses={
-Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,
-Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12
-};
+if(isNaN(d)) return "";
 
-var dia=partes[2];
-var mes=meses[partes[1]];
+var dias=[
+"dom","seg","ter","qua","qui","sex","sáb"
+];
 
-return dias[partes[0]]+", "+dia+"."+mes+".26";
+var meses=[
+1,2,3,4,5,6,7,8,9,10,11,12
+];
+
+return dias[d.getDay()]+", "+
+String(d.getDate()).padStart(2,"0")+
+"."+
+meses[d.getMonth()]+
+"."+
+String(d.getFullYear()).slice(-2);
+
+}catch(e){
+
+return "";
+
+}
 
 }
 
 fetch(api)
-.then(response=>response.json())
-.then(data=>{
+
+.then(function(response){
+
+return response.json();
+
+})
+
+.then(function(data){
 
 if(!data || data.length===0){
+
 container.innerHTML="Nenhum resultado.";
+
 return;
+
 }
 
 container.innerHTML='<div class="grid"></div>';
+
 var grid=container.querySelector(".grid");
 
 data.slice(0,10).forEach(function(item,index){
@@ -266,45 +279,83 @@ var imagem=item.imagem
 ? item.imagem.replace(/\/w\d+-h\d+[^/]*\//,"/w800/")
 : "";
 
+var imagemHtml=imagem
+
+? `<img src="${imagem}" class="card-img" loading="lazy">`
+
+: `<div class="card-img"></div>`;
+
 var card=document.createElement("a");
 
-card.href=item.url;
+card.href=item.url||"#";
+
 card.target="_blank";
+
 card.className="card";
 
 card.innerHTML=`
-<div class="ranking-number">${index+1}</div>
 
-<div class="views">
-<div class="points">${item.pontuacao} <i class='fa-solid fa-chart-simple'></i></div>
-<div class="views-count">${item.visualizacoes} <i class="fa-solid fa-eye"></i></div>
+<div class="ranking-number">
+${index+1}
 </div>
 
-<img src="${imagem}" class="card-img" loading="lazy">
+<div class="views">
+
+<div class="points">
+${item.pontuacao||0}
+<i class='fa-solid fa-chart-simple'></i>
+</div>
+
+<div class="views-count">
+${item.visualizacoes||0}
+<i class="fa-solid fa-eye"></i>
+</div>
+
+</div>
+
+${imagemHtml}
 
 <div class="overlay">
 
 <div class="bottom">
-<div class="autor">${item.autor}</div>
-<div class="titulo">${item.titulo}</div>
-<div class="data-postagem">${formatarData(item.publicacao)}</div>
+
+<div class="autor">
+${item.autor||""}
+</div>
+
+<div class="titulo">
+${item.titulo||""}
+</div>
+
+<div class="data-postagem">
+${item.publicacao?formatarData(item.publicacao):""}
 </div>
 
 </div>
+
+</div>
+
 `;
 
 grid.appendChild(card);
 
 setTimeout(function(){
+
 card.classList.add("fade-in");
+
 },index*120);
 
 });
 
 })
+
 .catch(function(err){
+
 console.error(err);
-container.innerHTML="<p style='color:#b00'>Erro ao carregar ranking.</p>";
+
+container.innerHTML=
+"<p style='color:#b00'>Erro ao carregar ranking.</p>";
+
 });
 
 </script>
